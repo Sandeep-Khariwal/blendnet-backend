@@ -1,5 +1,5 @@
 import auth from "../Modals/auth.js"
-import bcrypt from "bcrypt"
+// import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 export const Register = async(req,resp)=>{
@@ -11,19 +11,19 @@ export const Register = async(req,resp)=>{
             resp.status(200).json({success:false,message:"User Already Exist"})
         }
         else{
-            const salt = await bcrypt.genSalt(10)
-            const passwordHash = await bcrypt.hash(password,salt)
+            // const salt = await bcrypt.genSalt(10)
+            // const passwordHash = await bcrypt.hash(password,salt)
 
             const newuser = await new auth({
                 name,
                 email,
-                password:passwordHash
+                password
             }).save()
 
             var token = await jwt.sign({_id:newuser._id},process.env.SECRET_KEY,{expiresIn:"7d"})
             delete newuser.password;
             console.log("newuser.id : ",newuser.id);
-            // resp.status(201).json({success:true,message:"Registration Success",newuser,token,userId:newuser.id})
+            resp.status(201).json({success:true,message:"Registration Success",newuser,token,userId:newuser.id})
         }
     } catch (error) {
         console.log("Error in registration ", error);
@@ -41,7 +41,7 @@ export const Login = async(req,resp)=>{
             resp.status(400).json({success:false,message:"User Not Resgistered"})
         }
         else{
-            const isMatch = await bcrypt.compare(password,user.password)
+            const isMatch = password===user.password
             if(!isMatch){
                 resp.status(200).json({success:false,message:"Invalid Curredential"})
             } else{
