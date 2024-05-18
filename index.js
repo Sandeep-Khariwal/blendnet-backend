@@ -17,7 +17,7 @@ Database()
 app.use("/auth",router)
 app.use("/stock",stockRouter)
 
-const PORT = process.env.Server_PORT || 8080 
+const PORT = process.env.SERVER_PORT || 8080 
 app.listen(PORT,()=>{
     console.log(`server is running on PORT ${PORT}`);
 })
