@@ -41,8 +41,7 @@ export const Login = async(req,resp)=>{
             resp.status(400).json({success:false,message:"User Not Resgistered"})
         }
         else{
-            const isMatch = password===user.password
-            if(!isMatch){
+            if(password!=user.password){
                 resp.status(200).json({success:false,message:"Invalid Curredential"})
             } else{
                 var token = await jwt.sign({_id:user._id},process.env.SECRET_KEY,{expiresIn:"7d"})
